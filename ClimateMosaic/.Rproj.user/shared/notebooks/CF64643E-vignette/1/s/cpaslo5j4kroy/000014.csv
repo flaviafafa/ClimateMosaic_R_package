@@ -1,0 +1,11 @@
+"0","# interpolate and plot"
+"0","interpolations <- interpolate_data(coldest_df[, 3:5], grid_points)"
+"1","Assuming columns 1 and 2 of locs are (longitude,latidue) in degrees
+"
+"0","breaks <- seq(min(interpolations$adjusted_d), max(interpolations$adjusted_day), "
+"0","              length.out = 5)"
+"0","labels <- breaks - 365*(breaks > 365)"
+"0","labels <- format(as.Date(labels - 1, origin = ""2021-01-01""), ""%m-%d"")"
+"0","plot_interpolations(interpolations, ""Interpolations for Coldest Day of Year"", "
+"0","                    vibe = ""cold"", breaks = breaks, labels = labels,"
+"0","                    caption = ""lighter cyan = experiencing the coldest day earlier in winter (Dec.); darker cyan = later."") "

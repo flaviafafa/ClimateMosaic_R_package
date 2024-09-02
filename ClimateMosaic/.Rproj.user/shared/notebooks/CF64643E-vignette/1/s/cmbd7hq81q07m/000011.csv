@@ -1,0 +1,2 @@
+"0","cycle <- yearly_cycle(extract_data(climate_df_temp, ""04125"", ""t_daily_avg"")[, 4:5])"
+"0","plot(cycle$day_of_year, cycle$t_expected)"

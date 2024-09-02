@@ -1,0 +1,95 @@
+#' Estimates the yearly cycle of daily temperature for a weather station.
+#'
+#' Estimates the yearly cycle of a temperature-related variable (daily average,
+#' etc.) by day of year at a weather station using user-provided data. The model used
+#' is a linear combination of harmonics from the first to the order specified by users,
+#' accounting for noise in data across different years. It returns a dataframe of day
+#' of year and estimated temperature. See 'Details' for more about the model and
+#' assumptions.
+#'
+#' @details The equation for the harmonic fit is:
+#' \deqn{h(t) = A_0 + \sum_{k=1}^M \left[ A_k \cos(\omega_k t) + B_k \sin(\omega_k t)
+#' \right],} where \eqn{t} is the day of year from 1 to \eqn{ N = 365},
+#'  \eqn{\omega_k = \frac{2\pi k}{N} } and \eqn{M} is the number of harmonics used.
+#'  Typically \eqn{M = 2} is the most suitable for daily temperature data though
+#'  it depends. Smaller \eqn{M} might be prone to under-fitting, and larger \eqn{M}
+#'  might result in over-fitting. See
+#'   \url{https://doi.org/10.1175/JTECH-D-12-00195.1} for details.
+#'  Assumptions for the model is:
+#'  \itemize{
+#'        \item \code{Linearity}: The relationship between the predictor variables
+#'  (harmonics - sine and cosine terms of different frequencies on \eqn{t}) and the
+#'  response is linear. That is, the relationship between \eqn{t} and the response is
+#'  curved in a way that can be captured by the harmonics.
+#'        \item \code{Independence}: Observations should be independent of each other.
+#'        \item \code{Homoscedasticity}:  The variance of the errors (residuals) should
+#'        be constant across all levels of the predictor variables.
+#'        \item \code{Normality of Errors}: The errors (residuals) should be normally
+#'         distributed.
+#'
+#'  }
+#'
+#' @param dat a dataframe of two columns: the first is the date of the observation as
+#' Date object; the second is the observation for the temperature-related variable
+#' to be modeled.
+#' @param M (optional) an positive integer indicating the number of harmonics to be
+#' used in the model. Default is 2.
+#' @return a data frame with the following columns:
+#' \itemize{
+#'     \item \code{day_of_year} Ranges from 1 to 365.
+#'     \item \code{t_expected} The expected value of the response for each day of
+#'     year at the station.
+#' }
+#'
+#' @examples
+#' t_dat <- extract_data(climate_df[,-c(2,3,5)], id = "53150", var = "t_daily_avg")
+#' cycle_df <- yearly_cycle(dat = t_dat[,4:5])
+#' print(head(cycle_df))
+#' print(tail(cycle_df))
+#' @export
+yearly_cycle <- function(dat, M = 2){
+
+  # validate inputs
+  if (!inherits(dat, "data.frame")) {
+    stop("dat must be a data frame.")
+  }
+  if (ncol(dat) != 2){
+    stop("dat must have two columns: date and observation value.")
+  }
+  if (!(is.numeric(M) && (M == floor(M)))){
+    stop("M must be an integer.")
+  }
+  if (M <= 0){
+    stop("M should be positive")
+  }
+  tryCatch({
+    dates <- as.Date(dat[[1]])
+  }, error = function(e) {
+    stop("Invalid date format in the first column of dat. Error: ",
+         e$message)
+  })
+  if (!inherits(dat[[2]], "numeric")) {
+    stop("Second column of dat should be numeric")
+  }
+
+  # scale day of number for leap years to decimals from 1 to 365
+  dat$day_of_year <- as.numeric(format(dates, "%j"))
+  leap <- lubridate::leap_year(lubridate::year(dates))
+  leap_seq <- seq(1, 365, length.out = 366)
+  dat[leap, ]$day_of_year <- leap_seq[dat[leap, ]$day_of_year]
+
+  # fit a model of M harmonics
+  formula <- paste0(colnames(dat)[2], "~")
+  for (i in 1:M){
+    m <- i*2
+    formula <- paste0(formula, "cos(", m, "*pi*day_of_year/365)+sin(", m,
+                                  "*pi*day_of_year/365)+")
+  }
+  formula <- substr(formula, 1, nchar(formula) - 1)
+  fit <- stats::lm(formula, data = dat)
+
+  # predict expected value at each day of year
+  pred <- data.frame(day_of_year = 1:365)
+  pred$t_expected <- stats::predict(fit, newdata = pred)
+  return(pred)
+}

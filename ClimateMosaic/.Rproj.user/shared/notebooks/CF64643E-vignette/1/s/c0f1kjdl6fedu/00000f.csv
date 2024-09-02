@@ -1,0 +1,7 @@
+"0","# interpolate"
+"0","grid_points <- create_grid(0.6)"
+"0","# remove trends with high standard error (keep the first 60% quantile)"
+"0","trend_df_se <- trend_df[trend_df$se <= quantile(trend_df$se, 0.6), ]"
+"0","interpolations <- interpolate_data(trend_df_se[, c(5, 6, 2)], grid_points)"
+"1","Assuming columns 1 and 2 of locs are (longitude,latidue) in degrees
+"

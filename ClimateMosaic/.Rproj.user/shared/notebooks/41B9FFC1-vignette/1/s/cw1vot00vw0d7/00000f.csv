@@ -1,0 +1,4 @@
+"0","data(""climate_df"")"
+"0","data(""station_df"")"
+"0","contiguous_station_df <- station_df[station_df$contiguous, ]"
+"0","us_map <- subset(map_data(""usa""), !region %in% c(""alaska"", ""hawaii"", ""puerto rico""))"

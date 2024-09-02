@@ -1,0 +1,8 @@
+"0","# Import necessary packages"
+"0","#' @import elevatr"
+"0","#' @import ClimateMosaic"
+"0","#' @import ggplot2"
+"0",""
+"0","library(ggplot2)"
+"0","library(elevatr)"
+"0","library(ClimateMosaic)"

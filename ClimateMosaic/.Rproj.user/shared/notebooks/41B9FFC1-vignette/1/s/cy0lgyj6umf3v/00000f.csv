@@ -1,0 +1,7 @@
+"0","# Using just longitude and latitude as covariates"
+"0","grid_points <- create_grid(0.3)"
+"0","interpolations_2024_03 <- interpolate_data(avg_temp[, 2:4], grid_points)"
+"1","Assuming columns 1 and 2 of locs are (longitude,latidue) in degrees
+"
+"0","plot_interpolations(interpolations_2024_03,"
+"0","                    title = ""Interpolated Avg. Temperature in Mar. 2024 (w/o elevation)"")"

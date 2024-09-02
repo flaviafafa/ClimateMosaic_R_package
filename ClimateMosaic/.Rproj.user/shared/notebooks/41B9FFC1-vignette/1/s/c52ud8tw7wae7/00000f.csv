@@ -1,0 +1,10 @@
+"0","grid_points <- create_grid(0.3)"
+"0","interpolations <- interpolate_data(warmest_df[, c(3,4,2)], grid_points)"
+"1","Assuming columns 1 and 2 of locs are (longitude,latidue) in degrees
+"
+"0","breaks <- seq(min(interpolations$warmest_day), max(interpolations$warmest_day), "
+"0","                       length.out = 5)"
+"0","labels <- format(as.Date(breaks - 1, origin = ""2021-01-01""), ""%m-%d"")"
+"0","plot_interpolations(interpolations, title =""Interpolations for Warmest Day of Year"", "
+"0","                            vibe = ""hot"", labels = labels, breaks = breaks,"
+"0","                           caption = ""lighter red = experiencing the warmerst day earlier in  summer; daker red = later"") "

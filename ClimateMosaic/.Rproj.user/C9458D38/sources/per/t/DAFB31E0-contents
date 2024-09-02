@@ -1,0 +1,30 @@
+Package: ClimateMosaic
+Type: Package
+Title: US Climate Analysis and Visualization
+Version: 0.1.0
+Author: Flavia Jiang [aut, cre], Jasmine Wang [aut, cre]
+Maintainer: Flavia Jiang <yj472@cornell.edu>, Jasmine Wang <xw495@cornell.edu>
+Description: Functions to analyze climate patterns at weather stations, and make
+      and/or visualize interpolations for the contiguous U.S. It is called 
+      ClimateMosaic because the interpolation plots look like mosaic.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: xz
+Imports: 
+       lubridate,
+       sp,
+       ggplot2,
+       GpGp,
+       stats,
+       rlang,
+       elevatr
+RoxygenNote: 7.3.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
